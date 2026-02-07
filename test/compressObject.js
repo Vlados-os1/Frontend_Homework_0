@@ -28,4 +28,34 @@ QUnit.module("Тестируем функцию compressObject", function() {
 
         assert.deepEqual(result, {}, "Пустой объект должен вернуть пустой объект.");
     });
+
+    QUnit.test("Игнорирует символьные ключи (они не попадают в Object.keys)", function (assert) {
+        const sym = Symbol('id');
+        const obj = {
+            name: "Иван",
+            [sym]: "secret",
+            age: null
+        };
+        const result = compressObject(obj);
+        assert.deepEqual(result, { name: "Иван" }, 'Symbol-ключи игнорируются, как и положено');
+    });
+
+    QUnit.test("Сохраняет непустые строки: пробелы, '0', 'false'", function (assert) {
+        const input = {
+            empty: "",
+            space: " ",
+            zeroString: "0",
+            falseString: "false",
+            tab: "\t",
+            newline: "\n"
+        };
+        const expected = {
+            space: " ",
+            zeroString: "0",
+            falseString: "false",
+            tab: "\t",
+            newline: "\n"
+        };
+        assert.deepEqual(compressObject(input), expected, 'Только "" удаляется, всё остальное — остаётся');
+    });
 });
