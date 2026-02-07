@@ -34,4 +34,63 @@ QUnit.module('Тестируем функцию plainify', () => {
 
         assert.deepEqual(result, { x: 'hello', y: 42, 'z.a': 1, 'z.b': 2 }, 'Примитивы и вложенные объекты должны быть правильно преобразованы');
     });
+
+    QUnit.test('Работает правильно с null и undefined', (assert) => {
+        const originalObject = {
+            a: null,
+            b: {
+                c: undefined,
+                d: 0
+            }
+        };
+        const result = plainify(originalObject);
+
+        assert.deepEqual(result, { 'a': null, 'b.c': undefined, 'b.d': 0 }, 'null и undefined должны оставаться значениями');
+    });
+
+    QUnit.test('Работаем правильно с массивами', (assert) => {
+        const originalObject = {
+            tags: ['js', 'Go'],
+            user: {
+                hobbies: ['coding']
+            }
+        }
+        const result = plainify(originalObject);
+
+        assert.deepEqual(result, { 'tags': ['js', 'Go'], 'user.hobbies': ['coding'] }, 'Массивы должны сохраняться как массивы');
+    })
+
+    QUnit.test('Обработка пустых вложенных объектов', (assert) => {
+        const originalObject = {
+            a: 1,
+            emptySubObject: {},
+            b: {
+                c: {}
+            }
+        };
+        const result = plainify(originalObject);
+
+        assert.deepEqual(result, { a: 1 }, 'Пустые вложенные объекты не должны создавать ключей');
+    });
+
+    QUnit.test('Работает правильно с falsy значениями', (assert) => {
+        const originalObject = {
+            zero: 0,
+            emptyString: "",
+            boolFalse: false,
+            nested: {
+                val: 0
+            }
+        };
+        const result = plainify(originalObject);
+
+        const expected = {
+            'zero': 0,
+            'emptyString': "",
+            'boolFalse': false,
+            'nested.val': 0
+        };
+
+        assert.deepEqual(result, expected, 'Falsy значения должны корректно переноситься в плоский объект');
+    });
 });
