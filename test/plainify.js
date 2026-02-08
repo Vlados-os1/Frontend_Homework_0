@@ -94,3 +94,33 @@ QUnit.module('Тестируем функцию plainify', () => {
         assert.deepEqual(result, expected, 'Falsy значения должны корректно переноситься в плоский объект');
     });
 });
+
+QUnit.module('Валидация входных данных', () => {
+    QUnit.test('Должна выбрасывать ошибку, если передан null', (assert) => {
+        assert.throws(
+            () => plainify(null),
+            /Переданный аргумент "obj" должен быть объектом Plain Object/,
+            'Выбрасывает TypeError при передаче null'
+        );
+    });
+
+    QUnit.test('Должна выбрасывать ошибку, если передан массив', (assert) => {
+        assert.throws(
+            () => plainify([1, 2, 3]),
+            /Переданный аргумент "obj" должен быть объектом Plain Object/,
+            'Выбрасывает TypeError при передаче массива'
+        );
+    });
+
+    QUnit.test('Должна выбрасывать ошибку, если передано примитивное значение', (assert) => {
+        const primitives = [42, "string", true, undefined];
+
+        primitives.forEach(val => {
+            assert.throws(
+                () => plainify(val),
+                /Переданный аргумент "obj" должен быть объектом Plain Object/,
+                `Ошибка при передаче ${typeof val}`
+            );
+        });
+    });
+});

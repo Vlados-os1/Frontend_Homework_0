@@ -1,6 +1,8 @@
+'use strict';
+
 /**
- * Превращает вложенный объект в «плоский», соединяя ключи через точку.
- * @param {Object} obj - Исходный объект для преобразования.
+ * Превращает вложенный объект в «плоский», соединяя ключи через точку
+ * @param {Object} obj - Исходный объект для преобразования
  * @param {string} [prefix=''] - Текущий путь ключей
  *
  * @example
@@ -14,9 +16,21 @@
  *          }
  *      }
  * });
- * @returns {Object} Объект с одноуровневой структурой.
+ * @returns {Object} Объект с одноуровневой структурой
+ * @throws {TypeError} Если аргумент не является корректным объектом
  */
-function plainify(obj, prefix = '') {
+const plainify = (obj, prefix = '') => {
+    const isPlainObject = (value) => {
+        return !!value &&
+        typeof value === 'object' &&
+        !Array.isArray(value) &&
+        (value.constructor === Object || value.constructor === undefined)
+    }
+
+    if (!isPlainObject(obj)) {
+        throw TypeError('Переданный аргумент "obj" должен быть объектом Plain Object');
+    }
+
     let result = {};
 
     for (let key in obj) {
@@ -24,7 +38,7 @@ function plainify(obj, prefix = '') {
             const newKey = prefix ? `${prefix}.${key}` : key;
             const value = obj[key];
 
-            if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+            if (isPlainObject(value)) {
                 const flatObject = plainify(value, newKey);
                 Object.assign(result, flatObject);
             } else {
@@ -33,5 +47,5 @@ function plainify(obj, prefix = '') {
         }
     }
 
-  return result;
-}
+    return result;
+};
