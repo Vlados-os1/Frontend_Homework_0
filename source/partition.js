@@ -12,20 +12,23 @@
  * // returns [[2, 4], [1, 3]]
  * partition([1, 2, 3, 4], n => n % 2 === 0);
  * 
+ * @throws {Error} Если первый аргумент не является массивом
+ * @throws {Error} Если второй аргумент не является функцией
+ * 
  * @returns {Array<Array>} массив из двух массивов
  */
 const partition = (array, callback) => {
-  const passed = [];
-  const failed = [];
+  if (!Array.isArray(array)) {
+    throw new Error('Первый аргумент должен быть массивом');
+  }
 
-  for (let i = 0; i < array.length; i++) {
-    const item = array[i];
-    if (callback(item)) {
-      passed.push(item);
-    } else {
-      failed.push(item);
-    };
-  };
+  if (typeof callback !== 'function') {
+    throw new Error('Второй аргумент должен быть функцией');
+  }
 
-  return [passed, failed];
-};
+  return array.reduce((acc, item) => {
+    const targetIndex = callback(item) ? 0 : 1;
+    acc[targetIndex].push(item);
+    return acc;
+  }, [[], []]);
+}
