@@ -28,4 +28,29 @@ QUnit.module("Тестируем функцию compressObject", function() {
 
         assert.deepEqual(result, {}, "Пустой объект должен вернуть пустой объект.");
     });
+
+    QUnit.test("Не удаляет 0 и false", function(assert) {
+    const result = compressObject({
+        count: 0,
+        enabled: false,
+        empty: "",
+        nothing: null,
+    });
+
+    assert.deepEqual(result, { count: 0, enabled: false }, "0 и false должны сохраняться.");
+    });
+
+    QUnit.test("Не изменяет исходный объект", function(assert) {
+    const source = { a: 1, b: null, c: "" };
+    const copyBefore = { ...source };
+
+    compressObject(source);
+
+    assert.deepEqual(source, copyBefore, "Исходный объект не должен изменяться.");
+    });
+
+    QUnit.test("Сохраняет пробельные строки (не пустые)", function(assert) {
+    const result = compressObject({ a: " ", b: "" });
+    assert.deepEqual(result, { a: " " }, "Строка с пробелом не равна пустой строке и должна остаться.");
+    });
 });
