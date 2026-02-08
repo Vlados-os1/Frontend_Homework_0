@@ -24,8 +24,8 @@ const partition = (array, callback) => {
       passed.push(item);
     } else {
       failed.push(item);
-    };
-  };
+    }
+  }
 
   return [passed, failed];
 };
