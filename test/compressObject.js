@@ -58,4 +58,18 @@ QUnit.module("Тестируем функцию compressObject", function() {
         };
         assert.deepEqual(compressObject(input), expected, 'Только "" удаляется, всё остальное — остаётся');
     });
+
+    QUnit.test("Выбрасывает ошибку при вызове с null", function (assert) {
+        assert.throws(() => compressObject(null), /compressObject: expected an object/, "Должна быть ошибка при передаче null");
+    });
+
+
+    QUnit.test("Выбрасывает ошибку при вызове со строкой", function (assert) {
+        assert.throws(() => compressObject("hello"), /compressObject: expected an object/, "Должна быть ошибка при передаче строки");
+    });
+
+    QUnit.test("Выбрасывает ошибку при вызове с числом", function (assert) {
+        assert.throws(() => compressObject(322), /compressObject: expected an object/, "Должна быть ошибка при передаче числа");
+    });
+
 });
