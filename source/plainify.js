@@ -8,15 +8,16 @@
  *
  */
 function plainify(obj, parentKey = '', result = {}) {
-    for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            const newKey = parentKey ? `${parentKey}.${key}` : key;
-            if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
-                plainify(obj[key], newKey, result);
-            } else {
-                result[newKey] = obj[key];
-            }
+    Object.keys(obj).forEach(key => {
+        const newKey = parentKey ? `${parentKey}.${key}` : key;
+        const value = obj[key];
+        
+        if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+            plainify(value, newKey, result);
+        } else {
+            result[newKey] = value;
         }
-    }
+    });
+    
     return result;
-}   
+}
