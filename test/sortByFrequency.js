@@ -18,4 +18,15 @@ QUnit.module("Тестируем функцию sortByFrequency", function() {
 
         assert.deepEqual(result, [5], "Массив с одним элементом должен вернуть тот же элемент.");
     });
+    QUnit.test('Дополнительный тест: один элемент', function(assert) {
+
+    assert.deepEqual(sortByFrequency([5]), [5]);
+
+    });
+
+    QUnit.test('Дополнительный тест: все элементы разные', function(assert) {
+
+    assert.deepEqual(sortByFrequency([5, 2, 8, 1, 9]), [1, 2, 5, 8, 9]);
+
+    });
 });
