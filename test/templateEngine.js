@@ -51,5 +51,41 @@ QUnit.module("Тестируем функцию templateEngine", function() {
 
         assert.equal(result, ""); // должен вернуть пустую строку, если шаблон пустой
     });
+
+    QUnit.test("Корректно обрабатывает числовые значения", function(assert){
+        const template = "Возраст: {{age}}";
+        const data = { age: 30 };
+        const result = templateEngine(template, data);
+        assert.equal(result, "Возраст: 30");
+    });
+
+    QUnit.test("Корректно обрабатывает булевые значения", function(assert){
+        const template = "Активен: {{active}}";
+        const data = { active: true };
+        const result = templateEngine(template, data);
+        assert.equal(result, "Активен: true");
+    });
+
+    QUnit.test("Корректно обрабатывает null в качестве значения", function(assert){
+        const template = "Прописка: {{regestration}}";
+        const data = { regestration: null };
+        const result = templateEngine(template, data);
+        assert.equal(result, "Прописка: ");
+    });
+
+    QUnit.test("Корректно обрабатывает undefined в качестве значения", function(assert){
+        const template = "Фамилия: {{fullname}}";
+        const data = { fullname: undefined };
+        const result = templateEngine(template, data);
+        assert.equal(result, "Фамилия: ");
+    });
+
+    QUnit.test("Корректно обрабатывает массив как значение", function(assert){
+        const template = "Массив: {{items}}";
+        const data = { items: [1, 2, 3] };
+        const result = templateEngine(template, data);
+        assert.equal(result, "Массив: 1,2,3");
+    });
+
 });
 
