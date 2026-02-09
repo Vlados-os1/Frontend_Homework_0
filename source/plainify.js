@@ -20,6 +20,11 @@
  * @throws {TypeError} Если аргумент не является корректным объектом
  */
 const plainify = (obj, prefix = '') => {
+    /**
+     * Проверяет, является ли значение простым объектом Plain Object
+     * @param {*} value - Значение для проверки
+     * @returns {boolean} True, если это plain object
+     */
     const isPlainObject = (value) => {
         return !!value &&
         typeof value === 'object' &&
