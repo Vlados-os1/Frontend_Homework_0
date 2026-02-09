@@ -16,4 +16,14 @@ QUnit.module("Тестируем функцию flatten", function() {
         const result = flatten([]);
         assert.deepEqual(result, []);
     });
+
+    QUnit.test("Игнорирует пустые вложенные массивы", function(assert) {
+        const result = flatten([1, [], [2, [], [3, []]], 4]);
+        assert.deepEqual(result, [1, 2, 3, 4]);
+    });
+
+    QUnit.test("Работает, если массив состоит только из вложенных массивов", function(assert) {
+        const result = flatten([[1, 2], [3, 4], [[5]]]);
+        assert.deepEqual(result, [1, 2, 3, 4, 5]);
+});
 });
