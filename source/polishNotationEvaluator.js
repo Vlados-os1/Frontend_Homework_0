@@ -10,7 +10,6 @@
  *
  * @returns {number} - результат вычисления выражения
  */
-
 const polishNotationEvaluator = (expression) => {
     const tokens = expression.split(' ');
     const stack = [];
