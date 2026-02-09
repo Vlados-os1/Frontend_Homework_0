@@ -28,4 +28,25 @@ QUnit.module("Тестируем функцию polishNotationEvaluator", functi
 
         assert.equal(isNaN(result), true);
     });
+
+    QUnit.test("Правильно вычисялет деление", function(assert) {
+        const input = "/ 10 2"; // 10 / 2
+        const result = polishNotationEvaluator(input);
+
+        assert.equal(result, 5);
+    });
+
+    QUnit.test("Правильно вычисляет сложное вложенное выражение", function(assert) {
+        const input = "+ * 2 3 / 8 4"; // (2 * 3) + (8 / 4) = 6 + 2
+        const result = polishNotationEvaluator(input);
+
+        assert.equal(result, 8);
+    });
+
+    QUnit.test("Работает с многозначными числами", function(assert) {
+        const input = "* 100 15"; // 100 * 15
+        const result = polishNotationEvaluator(input);
+
+        assert.equal(result, 1500);
+    });
 });
