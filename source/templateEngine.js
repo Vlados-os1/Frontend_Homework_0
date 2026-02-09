@@ -11,15 +11,13 @@ const templateEngine = function (template, data){
     return template.replace(/{{\s*([^}]+)\s*}}/g, function (match, path){
         path = path.trim();
         const keys = path.split('.');
-        let result = data;
 
-        for (let i = 0; i < keys.length; i++){
-            if (result === undefined || result === null){
-                return '';
+        const result = keys.reduce( (acc, key) => {
+            if (acc == null){
+                return undefined;
             }
-            result = result[keys[i]];
-        }
-
-        return result !== undefined && result !== null ? String(result) : '';
+            return acc[key];
+        }, data);
+        return result == null ? '' : String(result);
     });
 };
