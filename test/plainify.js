@@ -34,4 +34,30 @@ QUnit.module('Тестируем функцию plainify', () => {
 
         assert.deepEqual(result, { x: 'hello', y: 42, 'z.a': 1, 'z.b': 2 }, 'Примитивы и вложенные объекты должны быть правильно преобразованы');
     });
+
+    QUnit.test('Обрабатывает null значения', (assert) => {
+        const originalObject = {
+            a: null,
+            b: {
+                c: null,
+                d: 5
+            }
+        };
+        const result = plainify(originalObject);
+
+        assert.deepEqual(result, { 'a': null, 'b.c': null, 'b.d': 5 }, 'null значения должны сохраняться как есть');
+    });
+
+    QUnit.test('Обрабатывает undefined значения', (assert) => {
+        const originalObject = {
+            a: undefined,
+            b: {
+                c: undefined,
+                d: 'defined'
+            }
+        };
+        const result = plainify(originalObject);
+
+        assert.deepEqual(result, { 'a': undefined, 'b.c': undefined, 'b.d': 'defined' }, 'undefined значения должны сохраняться как есть');
+    });
 });

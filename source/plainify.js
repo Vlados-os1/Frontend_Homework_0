@@ -1,23 +1,33 @@
 /**
- * Рекурсивно преобразует вложенный объект в plain объект, где ключи представляют собой пути к значениям через точку.
+ * Рекурсивно преобразует вложенный объект в плоский объект, где составные ключи формируются через точку
  * 
- * @param {Object} obj - исходный объект для преобразования
- * @param {string} [parentKey=''] - базовый ключ для текущего уровня рекурсии (используется внутренне)
- * @param {Object} [result={}] - аккумулятор для накопления результатов (используется внутренне)
- * @returns {Object} - плоский объект, где ключи представляют пути к значениям
- *
+ * @param {Object} obj - Исходный объект для преобразования
+ * @returns {Object} Плоский объект с ключами-путями
+ * 
  */
-function plainify(obj, parentKey = '', result = {}) {
-    Object.keys(obj).forEach(key => {
-        const newKey = parentKey ? `${parentKey}.${key}` : key;
-        const value = obj[key];
-        
-        if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-            plainify(value, newKey, result);
-        } else {
-            result[newKey] = value;
-        }
-    });
+function plainify(obj) {
+    /**
+     * Внутренняя рекурсивная функция для обхода объекта.
+     * 
+     * @param {Object} currentObj - Текущий объект для обработки
+     * @param {string} parentKey - Префикс для формирования составных ключей
+     * @param {Object} result - Аккумулятор результатов
+     * @returns {void}
+     */
+    function flatten(currentObj, parentKey, result) {
+        Object.keys(currentObj).forEach(key => {
+            const newKey = parentKey ? `${parentKey}.${key}` : key;
+            const value = currentObj[key];
+            
+            if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+                flatten(value, newKey, result);
+            } else {
+                result[newKey] = value;
+            }
+        });
+    }
     
+    const result = {};
+    flatten(obj, '', result);
     return result;
 }
