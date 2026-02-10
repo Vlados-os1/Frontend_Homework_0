@@ -24,4 +24,20 @@ QUnit.module('Тестируем функцию filterObjectByKeys', () => {
 
         assert.deepEqual(result, { a: 1 }, 'Отсутствующие ключи должны быть проигнорированы');
     });
+
+    QUnit.test('Работает правильно с пустым массивом ключей', (assert) => {
+        const originalObject = { a: 1, b: 2 };
+        const keysToFilter = [];
+        const result = filterObjectByKeys(originalObject, keysToFilter);
+
+        assert.deepEqual(result, {}, 'Если ключей нет — вернётся пустой объект');
+    });
+
+    QUnit.test('Работает правильно с пустым объектом', (assert) => {
+        const originalObject = {};
+        const keysToFilter = ['a', 'b'];
+        const result = filterObjectByKeys(originalObject, keysToFilter);
+
+        assert.deepEqual(result, {}, 'Если объект пустой — вернётся пустой объект');
+    });
 });
