@@ -87,6 +87,16 @@ const mergeObjects = (object1, object2, key) => {
 const mergeArrays = (array1, array2) => {
     const mergeArray = [];
 
+    /**
+     * Функция, добавляющая уникальные значения из массива в результат
+     * @param {Array} object1 - исходный массив
+     * 
+     * @example
+     * // returns [1, 2, 3]
+     * addingUniqueValues([1, 2, 3, 2, 1]);
+     * 
+     * @returns {void}
+     */
     const addingUniqueValues = (array) => {
         array.forEach(element => {
             const isDuplicate = mergeArray.some(elementInResult => _.isEqual(elementInResult, element));

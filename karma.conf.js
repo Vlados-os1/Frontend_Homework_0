@@ -12,6 +12,7 @@ module.exports = function (config) {
       ],
       frameworks: ['qunit'],
       files: [
+        'https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js',
         'source/*.js',
         'test/*.js'
       ],
