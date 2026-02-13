@@ -1,6 +1,87 @@
 'use strict';
 
 /**
+ * Функция, проверяющая что передаваемый элемент является объектом
+ * @param {*} object - объект для проверки
+ * 
+ * @example
+ * // returns true
+ * isObject({name: "Andrey", city: "Moscow"});
+ * 
+ * @returns {boolean}
+ */
+const isObject = (object) => {
+    return object !== null
+    && typeof object == 'object'
+    && !Array.isArray(object);
+}
+
+/**
+ * Функция, осуществляющая глубокое копирование
+ * @param {*} value - значение для копирования
+ * 
+ * @example
+ * // returns {name: "Andrey", city: "Moscow"}
+ * cloneDeep({name: "Andrey", city: "Moscow"});
+ * 
+ * @returns {*}
+ */
+const cloneDeep = (value) => {
+    if (Array.isArray(value))
+        return value.map(item => cloneDeep(item));
+    if (isObject(value)) {
+        const result = {};
+        Object.keys(value).forEach(key => {
+            result[key] = cloneDeep(value[key]);
+        });
+        return result;
+    }
+    return value;
+}
+
+/**
+ * Функция, осуществляющая глубокое сравнение
+ * @param {*} value1 - первое значение для сравнения
+ * @param {*} value2 - первое значение для сравнения
+ * 
+ * @example
+ * // returns true
+ * isEqual({name: "Andrey", city: "Moscow"}, {name: "Andrey", city: "Moscow"});
+ * 
+ * @returns {boolean}
+ */
+const isEqual = (value1, value2) => {
+    if (value1 === value2)
+        return true;
+    if (Number.isNaN(value1) && Number.isNaN(value2))
+        return true;
+    if (Array.isArray(value1) && Array.isArray(value2)) {
+        if (value1.length !== value2.length)
+            return false;
+        for (let i = 0; i < value1.length; i++) {
+            if (!isEqual(value1[i], value2[i]))
+                return false;
+        }
+        return true;
+    }
+    if (isObject(value1) && isObject(value2)) {
+        const keysA = Object.keys(value1);
+        const keysB = Object.keys(value2);
+        if (keysA.length !== keysB.length)
+            return false;
+        for (let i = 0; i < keysA.length; i++) {
+            const key = keysA[i];
+            if (!Object.prototype.hasOwnProperty.call(value2, key))
+                return false;
+            if (!isEqual(value1[key], value2[key]))
+                return false;
+        }
+        return true;
+    }
+    return false;
+}
+
+/**
  * Функция, объединяющая объекты из обоих массивов по указанному ключу
  * @param {Array<Object>} objects1 - первый массив объектов
  * @param {Array<Object>} objects2 - второй массив объектов
@@ -19,7 +100,7 @@ const mergeBy = (objects1, objects2, key) => {
     objects1.forEach(object => {
             const value = object[key];
             if (value !== undefined)
-                map.set(value, _.cloneDeep(object));
+                map.set(value, cloneDeep(object));
         }
     );
 
@@ -32,7 +113,7 @@ const mergeBy = (objects1, objects2, key) => {
             map.set(value, mergeObjects(objectInMap, object, key));
         }
         else
-            map.set(value, _.cloneDeep(object));
+            map.set(value, cloneDeep(object));
     });
 
     map.forEach(value => result.push(value));
@@ -53,7 +134,7 @@ const mergeBy = (objects1, objects2, key) => {
  * @returns {Array<Object>}
  */
 const mergeObjects = (object1, object2, key) => {
-    const mergeObject = _.cloneDeep(object1);
+    const mergeObject = cloneDeep(object1);
 
     Object.keys(object2).forEach(prop => {
         if (prop == key)
@@ -63,10 +144,10 @@ const mergeObjects = (object1, object2, key) => {
         const value2 = object2[prop];
 
         if (value1 == undefined)
-            mergeObject[prop] = _.cloneDeep(value2);
+            mergeObject[prop] = cloneDeep(value2);
         else if (Array.isArray(value1) && Array.isArray(value2))
             mergeObject[prop] = mergeArrays(value1, value2);
-        else if (_.isObject(value1) && _.isObject(value2))
+        else if (isObject(value1) && isObject(value2))
             mergeObject[prop] = mergeObjects(value1, value2, "");
     });
 
@@ -99,9 +180,9 @@ const mergeArrays = (array1, array2) => {
      */
     const addingUniqueValues = (array) => {
         array.forEach(element => {
-            const isDuplicate = mergeArray.some(elementInResult => _.isEqual(elementInResult, element));
+            const isDuplicate = mergeArray.some(elementInResult => isEqual(elementInResult, element));
             if (!isDuplicate)
-                mergeArray.push(_.cloneDeep(element));
+                mergeArray.push(cloneDeep(element));
         });
     }
 
